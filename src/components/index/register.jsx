@@ -11,8 +11,8 @@ export default function Register () {
         pswd: ''
     })
     const [datosLogin, setDatosLogin] = useState({
-        emailLogin: '',
-        pswdLogin: ''
+        username: '',
+        pswd: ''
     })
 
     const handleChange = (e) => {
@@ -28,7 +28,7 @@ export default function Register () {
     }
 
     const handleLoginSubmit = async (e) => {
-        e.preventDefault();
+        //e.preventDefault();
         setSpinner(true)     
         console.log(datosLogin)
         //setLoading(false)
