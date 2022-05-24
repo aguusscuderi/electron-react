@@ -6,6 +6,10 @@ This project was bootstrapped with [Create React App](https://github.com/faceboo
 
 In the project directory, you can run:
 
+### `npm run dev`
+On 'electron-react' folder will allow you to run simultaneously the backend, including the frontend, and also you'r desktop application configured with
+the Electron framework.
+
 ### `npm start`
 
 Runs the app in the development mode.\
