@@ -1,9 +1,12 @@
 import RegisterForm from "./registerForm"
-import { useEffect, useState } from "react"
+import { useContext, useEffect, useState } from "react"
 import Spinner from '../front-stuff/spinner'
+import { UserContext } from "../../context/userContext"
+import { useNavigate } from "react-router-dom"
+import Menu from '../menu/menu'
 
 export default function Register () {
-    //const [loading, setLoading] = useState(true)
+    const navigate = useNavigate()
     const [spinner, setSpinner] = useState(false)
     const [datosRegister, setDatosRegister] = useState({
         username: '',
@@ -14,6 +17,9 @@ export default function Register () {
         username: '',
         pswd: ''
     })
+    let [userData, setUserData] = useState({})
+    //const { user, getUser } = useContext(UserContext)
+    const [logged, setLogged] = useState(false)
 
     const handleChange = (e) => {
         const {name, value} = e.target
@@ -24,14 +30,22 @@ export default function Register () {
     const handleLoginChange = (e) => {
         const {name, value} = e.target
         setDatosLogin({...datosLogin, [name]:value})
-        console.log(datosLogin)
+        //console.log(datosLogin)
     }
 
     const handleLoginSubmit = async (e) => {
-        //e.preventDefault();
+        e.preventDefault();
         setSpinner(true)     
-        console.log(datosLogin)
-        //setLoading(false)
+        let response = await fetch('http://localhost:8080/api/login', {
+            method: 'POST',
+            body: JSON.stringify(datosLogin),
+            headers: {'Content-Type': 'application/json'},
+            credentials: 'include',
+        })
+
+        const data = await response.json()
+        //console.log(data)
+        navigate('/api/successlogin')
         setSpinner(false)
     }
 
@@ -41,15 +55,7 @@ export default function Register () {
         console.log(datosRegister)
         //setLoading(false)
         setSpinner(false)
-        }
-
-    /*useEffect(() => {
-        fetch('/api/').then(res =>{
-            if(res.ok){
-                return res.json()
-            }
-        }).then(jsonMock => console.log(jsonMock, 'esta es la data del mock'))
-    }, [])*/
+    }
 
     return(
         <>

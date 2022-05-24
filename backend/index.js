@@ -12,8 +12,21 @@ const LocalStrategy = require('passport-local').Strategy
 const db_connection = require('./config/db')
 const bcrypt = require('bcrypt')
 const UserModel = require('./schema/userSchema')
+const jwt = require('jsonwebtoken')
 
-app.use(cors("*"))
+//app.use(cors("*"))
+let whitelist = ['http://localhost:3000']
+let corsConfig = {
+    origin: function(origin, callback) {
+        if (whitelist.indexOf(origin) !== -1){
+            callback(null, true)
+        }else{
+            callback(new Error('Not allowed'))
+        }
+    },
+    credentials: true
+}
+app.use(cors(corsConfig))
 app.use(express.json())
 app.use(express.urlencoded({extended: true}))
 app.use(cookieParser())
@@ -32,7 +45,6 @@ app.use(session({
 }))
 app.use(passport.initialize())
 app.use(passport.session())
-
 
 db_connection()
 
@@ -79,6 +91,11 @@ passport.use('login', new LocalStrategy({
             console.log('Invalid pswd', user + pswd)
             return done(null, false)
         }else{
+            /*let id = user._id
+            const token = jwt.sign({id}, 'userSecret', {
+                expiresIn: 300,
+            })
+            res.json({auth: true, token: token, user:user})*/
             return done(null, user)
         }
     }
@@ -89,11 +106,11 @@ passport.serializeUser((user, done) => {
     done(null, user._id)
 })
 
-passport.deserializeUser((id, done) => {
-    UserModel.find({_id: `${id}`}, (err, user) => {
-        done(err, user)
-    })
-})
+passport.deserializeUser(function(id, done){
+    UserModel.findById(id, function(err, user){
+        done(err, user);
+    });
+});
 
 serverRouter(app)
 

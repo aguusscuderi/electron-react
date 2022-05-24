@@ -7,16 +7,7 @@ const username = Joi.string().min(3).required()
 const pswd = Joi.number().required()
 const email = Joi.string()
 
-
-/*function createHash(pswd){
-   return bcrypt.hashSync(pswd, bcrypt.genSaltSync(10), null)
-}*/
-
 const userCreateSchema = {
-   /*username: username,
-   email: email,
-   pswd: createHash(pswd)*/
-   
    username,
    email,
    pswd

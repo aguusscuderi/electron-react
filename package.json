@@ -12,11 +12,13 @@
     "@testing-library/jest-dom": "^5.16.1",
     "@testing-library/react": "^12.1.2",
     "@testing-library/user-event": "^13.5.0",
+    "axios": "^0.27.2",
     "concurrently": "^6.4.0",
     "electron-is-dev": "^2.0.0",
     "electron-squirrel-startup": "^1.0.0",
     "react": "^17.0.2",
     "react-dom": "^17.0.2",
+    "react-router": "^6.2.1",
     "react-router-dom": "^6.2.1",
     "react-scripts": "5.0.0",
     "wait-on": "^6.0.0",
@@ -38,6 +40,9 @@
       "react-app",
       "react-app/jest"
     ]
+  },
+  "browser": {
+    "original-fs": false
   },
   "browserslist": {
     "production": [

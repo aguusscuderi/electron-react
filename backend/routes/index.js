@@ -2,10 +2,31 @@ const { Router } = require('express')
 const router = Router()
 const passport = require('passport')
 const mock = require('../config/mock')
-const httpProxy = require('http-proxy')
-const proxy = httpProxy.createProxyServer({})
+const cors = require('cors')
+const jwt = require('jsonwebtoken')
 
 //FUNCTIONS AND MIDDLEWARES
+
+const verifyJwt = (req, res, next) => {
+    console.log('desde el verifyjwt')
+    const token = req.headers["x-access-token"]
+    if(!token){
+        console.log('entre por false')
+        res.send('we need a token')
+    }else{
+        console.log('entre por true')
+        jwt.verify(token, 'userSecret', (err, decoded) =>{
+            if(err){
+                res.json({auth: false})
+            }else{
+                req.userId = decoded.id
+            }
+            next()
+        })
+    }
+
+}
+
 function isAuth (req, res, next){
     if(req.isAuthenticated()){
         let user = req.user
@@ -32,11 +53,13 @@ function isAuth (req, res, next){
         }
         console.log('session done')*/
 
+        //console.log(user)
         res.send(user)
         //res.redirect()
-        // proxy.web(req, res, {target: 'http://localhost:3000/api/successlogin'})
+        //res.render('../../src/components/menu/menu', user)
         next()
     }else{
+        console.log('salio mal xd')
         res.redirect('/api/login')
     }
 }
@@ -75,17 +98,25 @@ function serverRouter(app){
         res.send('entraste en login')
     })
     
-    router.get('/successlogin', isAuth, (req, res)=>{
-        //res.json(mock)
-        //res.json(req.user)
-    })
+   /* router.get('/successlogin', isAuth, (req, res)=>{
+
+    })*/
 
     /*router.get('/user', (req, res) => {
         res.send(req.user)
     })*/
 
-    router.post('/successlogin', (req, res)=>{
+    /*router.post('/successlogin', (req, res)=>{
         res.json(mock)
+    })*/
+
+    router.get('/user', (req, res) => {
+        let user = req.user
+        if(user){
+            res.json(user)
+        }else{
+            res.send('Not authenticated.')
+        }
     })
 
     router.post('/signup', passport.authenticate('signup', {
@@ -93,13 +124,8 @@ function serverRouter(app){
         failureRedirect: '/api/badlogin'
     }))
 
-    router.post('/login', passport.authenticate('login', {
-        //successRedirect: 'http://localhost:3000/api/successlogin',
-        successRedirect: "/api/successlogin",
-        failureRedirect: '/api/badlogin'
-    }), (req, res) => {
-        const user = req.body
-        //console.log(user)
+    router.post('/login', passport.authenticate('login'), /*verifyJwt*/ isAuth, (req, res) => {
+        //res.set('Access-Control-Allow-Origin', 'http://localhost:3000')
     })
 
     

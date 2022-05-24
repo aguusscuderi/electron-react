@@ -17,7 +17,7 @@ export default function RegisterForm (props) {
 			</div>
 
 			<div className="login">
-				<form action="http://localhost:8080/api/login" method="POST">
+				<form /*action="http://localhost:8080/login"*/ /*method="POST"*/>
 				{/* <form action="http://localhost:8080/login" method="POST"> */}
 					<label htmlFor="chk" aria-hidden="true">Login</label>
 					{/* <label htmlFor="username">USERNAME</label> */}
